@@ -9,7 +9,7 @@ def index(request):
     z = request.POST['z']
 
     save_coordinate_to_npy(x, y, z)
-    load_coordinate_stream()
+    load_coordinate_stream(x, y, z)
 
     return render(request, 'index.html', {
             'videos': 'hello',
