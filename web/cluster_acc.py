@@ -10,6 +10,22 @@ STOP_ERROR_DISTANCE_CONSTANT = 1
 MIN_CHUNK_SIZE = 100
 TRIGGER_ACTION = np.array([0, 2])
 
+UP_ACTION = 0
+DOWN_ACTION = 1
+RIGHT_ACTION = 2
+LEFT_ACTION = 3
+FORWARD_ACTION = 4
+BACK_ACTION = 5
+
+# Watch face up and hand extended forward
+# Values from https://developer.pebble.com/guides/events-and-services/accelerometer/
+UP_VECTOR = np.array([0, 0, 1])
+DOWN_VECTOR = np.array([0, 0, -1])
+RIGHT_VECTOR = np.array([0, 1, 0])
+LEFT_VECTOR = np.array([0, -1, 0])
+FORWARD_VECTOR = np.array([1, 0, 0])
+BACK_VECTOR = np.array([-1, 0, 0])
+
 def save_coordinate_to_npy(x, y, z):
     if os.path.exists(STREAM_PATH):
         stream = np.load(STREAM_PATH)
