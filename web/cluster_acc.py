@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import math
 
 STREAM_PATH = "stream"
 PREVIOUS_ACTION_PATH = "action"
@@ -29,6 +30,7 @@ BACK_VECTOR = np.array([-1, 0, 0])
 def save_coordinate_to_npy(x, y, z):
     if os.path.exists(STREAM_PATH):
         stream = np.load(STREAM_PATH)
+        stream.append([x, y, z])
     else:
         stream = np.array([[x, y, z]])
     np.save(STREAM_PATH, stream)
@@ -58,6 +60,39 @@ def load_coordinate_stream(x, y, z):
 def convert_points_to_vector(stream):
     return max(stream, key=lambda x: magnitude(x))
 
-# TODO Vikranth
-def classify_action(vector):
-    return np.array([0])
+def cosineSimilarity(vectorA, vectorB):
+    dotProduct = 0.0
+    normA = 0.0
+    normB = 0.0
+    for i, vect in enumerate(vectorA):
+        dotProduct += vectorA[i] * vectorB[i]
+        normA += vectorA[i]**2
+        normB += vectorB[i]**2
+
+    return dotProduct / (math.sqrt(normA) * math.sqrt(normB))
+
+
+def classify_action(accelVector):
+    probableAction = RIGHT_ACTION
+    cosineSim = -1.0
+
+    if cosineSim < cosineSimilarity(accelVector,
+                                           RIGHT_VECTOR):
+        probableAction = RIGHT_ACTION
+
+    if cosineSim < cosineSimilarity(accelVector, LEFT_VECTOR):
+        probableAction = LEFT_ACTION
+
+    if cosineSim < cosineSimilarity(accelVector, UP_VECTOR):
+        probableAction = UP_ACTION
+
+    if cosineSim < cosineSimilarity(accelVector, DOWN_VECTOR):
+        probableAction = DOWN_ACTION
+
+    if cosineSim < cosineSimilarity(accelVector, FORWARD_VECTOR):
+        probableAction = FORWARD_ACTION
+
+    if cosineSim < cosineSimilarity(accelVector, DOWN_VECTOR):
+        probableAction = DOWN_ACTION
+
+    return np.array([probableAction])
